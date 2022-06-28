@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "set NODE_ENV=development && nodemon server.js",
-    "prod": "set NODE_ENV=production && nodemon server.js"
+    "prod": "set NODE_ENV=production && nodemon server.js",
+    "deleteData": "node importData.js --delete",
+    "importData": "node importData.js --import"
   },
   "engines": {
     "node": ">=10.0.0"
