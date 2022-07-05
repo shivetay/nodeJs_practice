@@ -1,18 +1,23 @@
 const Tour = require("../models/tourModel");
+const APIFeatures = require("../utils/apiFeatures");
+
+exports.topTours = (req, res, next) => {
+  req.query.limit = "5";
+  req.query.sort = "-price";
+  req.query.fields = "name, price, summary";
+
+  next();
+};
 
 exports.getAllTours = async (req, res) => {
   try {
-    //remove fields from params and making copy of query.params
-    const queryObj = { ...req.query };
-    const excludedFields = ["page", "sort", "limit", "field"];
-    excludedFields.forEach((el) => delete queryObj[el]);
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limit()
+      .pagination();
 
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
-    const query = await Tour.find(JSON.parse(queryStr));
-
-    const tours = query;
+    const tours = await features.query;
     res.status(200).json({
       status: "SUCCESS",
       data: {
@@ -99,6 +104,46 @@ exports.deleteTour = async (req, res) => {
     res.status(204).json({
       status: "SUCCESS",
       data: null,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "FAILED",
+      message: err,
+    });
+  }
+};
+
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $match: {
+          ratingsAverage: { $gte: 4.5 },
+        },
+      },
+      {
+        $group: {
+          _id: "$difficulty",
+          numRaitings: { $sum: "$ratingsQuantity" },
+          numTours: { $sum: 1 },
+          avgRating: { $avg: "$ratingsAverage" },
+          avgPrice: { $avg: "$price" },
+          minPrice: { $min: "$price" },
+          maxPrice: { $max: "$price" },
+        },
+        $sort: {
+          avgPrice: 1,
+        },
+      },
+    ]);
+
+    console.log(stats);
+
+    res.status(200).json({
+      status: "SUCCESS",
+      data: {
+        stats,
+      },
     });
   } catch (err) {
     res.status(400).json({
