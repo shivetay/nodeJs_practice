@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 const tourSchema = new mongoose.Schema(
   {
@@ -6,6 +7,9 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is requierd"],
       unique: true,
+    },
+    slug: {
+      type: String,
     },
     duration: {
       type: Number,
@@ -55,6 +59,23 @@ const tourSchema = new mongoose.Schema(
 tourSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
+
+//document middleware: runs before .save() .create()
+tourSchema.pre("save", function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+// eslint-disable-next-line prefer-arrow-callback
+// tourSchema.pre("save", function (next) {
+//   console.log("save");
+//   next();
+// });
+
+// tourSchema.post("save", (doc, next) => {
+//   console.log(doc);
+//   next();
+// });
 
 const Tour = mongoose.model("Tour", tourSchema);
 
