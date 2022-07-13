@@ -7,7 +7,8 @@
     "dev": "set NODE_ENV=development && nodemon server.js",
     "prod": "set NODE_ENV=production && nodemon server.js",
     "deleteData": "node importData.js --delete",
-    "importData": "node importData.js --import"
+    "importData": "node importData.js --import",
+    "debug": "ndb server.js"
   },
   "engines": {
     "node": ">=10.0.0"
@@ -17,7 +18,8 @@
     "express": "^4.18.1",
     "mongoose": "^6.4.1",
     "morgan": "^1.10.0",
-    "slugify": "^1.6.5"
+    "slugify": "^1.6.5",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "eslint": "^8.18.0",
