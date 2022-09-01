@@ -101,6 +101,13 @@ tourSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
 
+//virtual populate
+tourSchema.virtual("reviews", {
+  ref: "Review",
+  foreginField: "tour", //this is from review model
+  localField: "_id", //this is from tourmodel
+});
+
 //document middleware: runs before .save() .create()
 tourSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
@@ -136,6 +143,9 @@ tourSchema.pre(/^find/, function (next) {
   this.populate({
     path: "guides",
     select: "-_v -passwordChangedAt",
+  });
+  this.populate({
+    path: "reviews",
   });
 
   next();

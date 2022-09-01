@@ -21,6 +21,7 @@ const reviewSchema = new mongoose.Schmea(
         required: [true, "must have tour"],
       },
     ],
+    //child refrerencing
     user: [
       {
         type: mongoose.Schema.ObjectId,
@@ -46,6 +47,20 @@ reviewSchema.post("save", function (next) {
     path: "tour",
   });
 
+  next();
+});
+
+//populate revews with user and tours change id to user/tour data
+reviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "user",
+    select: "name photo",
+  });
+
+  // this.populate({
+  //   path: "tour",
+  //   select: "name",
+  // });
   next();
 });
 
