@@ -1,5 +1,4 @@
 const Tour = require("../models/tourModel");
-const APIFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const factory = require("./handlerFactoryController");
@@ -12,41 +11,43 @@ exports.topTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limit()
-    .pagination();
+// exports.getAllTours = catchAsync(async (req, res, next) => {
+//   const features = new APIFeatures(Tour.find(), req.query)
+//     .filter()
+//     .sort()
+//     .limit()
+//     .pagination();
 
-  const tours = await features.query;
-  res.status(200).json({
-    status: "SUCCESS",
-    data: {
-      tours,
-    },
-  });
-  // try {
-  //   const features = new APIFeatures(Tour.find(), req.query)
-  //     .filter()
-  //     .sort()
-  //     .limit()
-  //     .pagination();
+//   const tours = await features.query;
+//   res.status(200).json({
+//     status: "SUCCESS",
+//     data: {
+//       tours,
+//     },
+//   });
+//   // try {
+//   //   const features = new APIFeatures(Tour.find(), req.query)
+//   //     .filter()
+//   //     .sort()
+//   //     .limit()
+//   //     .pagination();
 
-  //   const tours = await features.query;
-  //   res.status(200).json({
-  //     status: "SUCCESS",
-  //     data: {
-  //       tours,
-  //     },
-  //   });
-  // } catch (err) {
-  //   res.status(400).json({
-  //     status: "FAILED",
-  //     message: err,
-  //   });
-  // }
-});
+//   //   const tours = await features.query;
+//   //   res.status(200).json({
+//   //     status: "SUCCESS",
+//   //     data: {
+//   //       tours,
+//   //     },
+//   //   });
+//   // } catch (err) {
+//   //   res.status(400).json({
+//   //     status: "FAILED",
+//   //     message: err,
+//   //   });
+//   // }
+// });
+
+exports.getAllTours = factory.getAll(Tour);
 
 exports.singleTours = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id); //populate moved to query middleware

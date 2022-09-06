@@ -17,8 +17,12 @@ router.route("/tour-stats").get(tourController.getTourStats);
 
 router
   .route("/")
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.createTour)
+  .get(tourController.getAllTours)
+  .post(
+    authController.protect,
+    authController.restrictTo("admin", "lead-guide"),
+    tourController.createTour
+  )
   .delete(authController.protect, authController.restrictTo("admin"));
 router.route("/:id").get(tourController.singleTours);
 
