@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Tour = require("./tourModel");
 
-const reviewSchema = new mongoose.Schmea(
+const reviewSchema = new mongoose.Schema(
   {
     review: { type: String, required: [true, "can't be empty"] },
     rating: {
