@@ -6,13 +6,13 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: [true, "Name is requierd"],
+    require: [true, "Name is required"],
     unique: true,
   },
 
   email: {
     type: String,
-    require: [true, "Email is requierd"],
+    require: [true, "Email is required"],
     unique: true,
     //transform to lower case
     lowercase: true,
@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
 
   photo: {
     type: String,
+    default: "default.jpeg",
   },
 
   role: {
@@ -31,7 +32,7 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type: String,
-    require: [true, "Password is requierd"],
+    require: [true, "Password is required"],
     unique: true,
     // minlength: 8,
     select: false,
@@ -39,10 +40,10 @@ const userSchema = new mongoose.Schema({
 
   passwordConfirm: {
     type: String,
-    // require: [true, "Name is requierd"],
+    // require: [true, "Name is required"],
     require: true,
     validate: {
-      //only works on saev!!
+      //only works on save!!
       validator: function (el) {
         return el === this.password;
       },
